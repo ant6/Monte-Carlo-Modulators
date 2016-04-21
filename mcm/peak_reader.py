@@ -37,4 +37,6 @@ def read_peak_database(peak_file):
 if __name__ == '__main__':
     from os.path import join
     peaks = read_peak_database(join("..", "data", "peaks.dat"))
-    print(peaks)
+    # print(peaks)
+    from mcm.measurements import calculate_number_of_peaks
+    calculate_number_of_peaks(5.0, 15.0, peaks[0])
