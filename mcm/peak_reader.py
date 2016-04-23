@@ -34,9 +34,16 @@ def read_peak_database(peak_file):
 
     return np.array(peak_list)
 
+
+def read_one_peak(f):
+    return np.loadtxt(f, delimiter=',', unpack=True)
+
 if __name__ == '__main__':
+    start = 5.0
+    stop = 15.0
+
     from os.path import join
-    peaks = read_peak_database(join("..", "data", "peaks.dat"))
-    # print(peaks)
+    peak = read_one_peak(join("..", "data", "rs0.dat"))
+    print(peak)
     from mcm.measurements import calculate_number_of_peaks
-    calculate_number_of_peaks(5.0, 15.0, peaks[0])
+    calculate_number_of_peaks(5.0, 15.0, peak)
