@@ -45,5 +45,7 @@ if __name__ == '__main__':
     from os.path import join
     peak = read_one_peak(join("..", "data", "rs0.dat"))
     print(peak)
+    from mcm.plotting import plot_one_peak
+    plot_one_peak(peak)
     from mcm.measurements import calculate_number_of_peaks
     calculate_number_of_peaks(5.0, 15.0, peak)
