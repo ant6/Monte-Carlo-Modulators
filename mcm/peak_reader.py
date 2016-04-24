@@ -39,13 +39,19 @@ def read_one_peak(f):
     return np.loadtxt(f, delimiter=',', unpack=True)
 
 if __name__ == '__main__':
-    start = 5.0
-    stop = 15.0
-
+    from mcm.measurements import *
+    from mcm.plotting import *
     from os.path import join
-    peak = read_one_peak(join("..", "data", "rs0.dat"))
-    print(peak)
-    from mcm.plotting import plot_one_peak
-    plot_one_peak(peak)
-    from mcm.measurements import calculate_number_of_peaks
-    calculate_number_of_peaks(5.0, 15.0, peak)
+
+    # single peak tests
+    peak1 = read_one_peak(join("..", "data", "rs0.dat"))
+    peak2 = read_one_peak(join("..", "data", "rs3000.dat"))
+    # plot_one_peak(peak1)
+    # plot_one_peak(peak2)
+
+    sum = sum_peak_to_one([peak1, peak2])
+    plot_one_peak(sum)
+
+    # other BS
+    # from mcm.measurements import calculate_number_of_peaks
+    # calculate_number_of_peaks(5.0, 15.0, peak)

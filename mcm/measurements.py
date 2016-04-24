@@ -1,6 +1,8 @@
 from math import ceil
 import numpy as np
 
+__all__ = ["calculate_number_of_peaks", "sum_peak_to_one"]
+
 
 def calculate_peak_width(peak):
     maximum = peak[1].max()
@@ -31,3 +33,13 @@ def calculate_number_of_peaks(begin, end, peak):
     print(number_of_peaks)
 
     return number_of_peaks
+
+
+def sum_peak_to_one(peaks):
+    if len(peaks) > 1:
+        sum = np.zeros(len(peaks[0][0]))
+        for p in peaks:
+            sum += p[1]
+        return np.array([peaks[0][0], sum])
+    else:
+        raise ValueError("Nothing to sum")
