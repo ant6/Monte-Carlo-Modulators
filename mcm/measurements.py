@@ -10,17 +10,9 @@ def calculate_peak_width(peak):
     maximum = peak[1].max()
     value = 0.8 * maximum
 
-    vals = get_positions_of_value(peak, value)
+    vals = where_is_this_val(value, peak)
 
     return vals
-
-
-def get_positions_of_value(peak, value):
-    pos = np.where(peak[1] == value)
-    if len(pos[0]) > 0:
-        return pos[0][0]
-    else:
-        raise ValueError()
 
 
 def calculate_number_of_peaks(begin, end, peak):
@@ -49,7 +41,7 @@ def sum_peak_to_one(peaks):
 
 def where_is_this_val(val, one_dim_array):
     """Wrapper for numpy.where - return just one, first val found"""
-    return np.where(one_dim_array == val)[0][0]
+    return (np.abs(one_dim_array - val)).argmin()
 
 
 def check_conditions(begin, end, sum_peak):
@@ -60,9 +52,9 @@ def check_conditions(begin, end, sum_peak):
     values = sum_peak[1]
     ind_begin = where_is_this_val(begin, domain)
     ind_end = where_is_this_val(end, domain)
-    print(ind_begin, domain[ind_begin], ind_end, domain[ind_end])
-    max_val = np.argmax(values)
-    print(values[ind_begin], values[ind_end], max_val, values[max_val])
+    # print(ind_begin, domain[ind_begin], ind_end, domain[ind_end])
+    # max_val = np.argmax(values)
+    # print(values[ind_begin], values[ind_end], max_val, values[max_val])
     # TODO: more complex condition checking
     interesting_part = values[ind_begin:ind_end]
     return 1 - (interesting_part.max() - interesting_part.min())

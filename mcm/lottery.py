@@ -1,7 +1,7 @@
 from random import uniform, choice
 
 
-def random_peak_with_position(begin, end, peaks, n):
+def random_peaks_with_positions(begin, end, peaks, n):
     """
     Return n pairs (random peak from peaks, random number from <begin, end>)
     :param begin:

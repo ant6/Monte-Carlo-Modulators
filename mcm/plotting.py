@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 __all__ = ["plot_one_peak"]
 
 
-def plot_one_peak(peak, title=None, norm=True):
+def plot_one_peak(peak, title=None, norm=True, begin=None, end=None):
     plt.clf()
     plt.xlabel("Depth in water [mm]")
     plt.ylabel("Relative dose")
@@ -16,6 +16,9 @@ def plot_one_peak(peak, title=None, norm=True):
         plt.ylim([0, 1])
     if title:
         plt.title(title)
+    if begin and end:
+        plt.plot([begin, begin], [0, 1])
+        plt.plot([end, end], [0, 1])
     plt.plot(peak[0], peak[1])
     plt.show()
 
