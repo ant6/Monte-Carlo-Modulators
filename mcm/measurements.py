@@ -8,33 +8,31 @@ __all__ = ["calculate_number_of_peaks", "sum_peak_to_one", "check_conditions", "
 
 def calculate_peak_width(peak):
     maximum = peak[1].max()
-    value = 0.8 * maximum
+    value = 0.75 * maximum
+    vals = np.where(peak[1] == value)
 
-    vals = where_is_this_val(value, peak)
-
-    return vals
+    return vals[0][-1] - vals[0][0]
 
 
 def calculate_number_of_peaks(begin, end, peak):
     # TODO: correct this BS...
-    width = calculate_peak_width(peak)
+    width_in_ind = calculate_peak_width(peak)
 
-    a = np.where(peak[0] == begin)[0][0]
-    b = np.where(peak[0] == end)[0][-1]
+    begin_ind = where_is_this_val(begin, peak[0])
+    end_ind = where_is_this_val(end, peak[0])
 
-    print(a, b, b-a, width)
-    number_of_peaks = 1 + int(ceil((b - a) / width))
-    print(number_of_peaks)
+    print(begin_ind, end_ind, end_ind-begin_ind, width_in_ind)
+    number_of_peaks = 1 + int(ceil((end_ind - begin_ind) / width_in_ind))
 
     return number_of_peaks
 
 
 def sum_peak_to_one(peaks):
     if len(peaks) > 1:
-        sum = np.zeros(len(peaks[0][0]))
+        peak_sum = np.zeros(len(peaks[0][0]))
         for p in peaks:
-            sum += p[1]
-        return np.array([peaks[0][0], sum])
+            peak_sum += p[1]
+        return np.array([peaks[0][0], peak_sum])
     else:
         raise ValueError("Nothing to sum")
 
@@ -52,9 +50,6 @@ def check_conditions(begin, end, sum_peak):
     values = sum_peak[1]
     ind_begin = where_is_this_val(begin, domain)
     ind_end = where_is_this_val(end, domain)
-    # print(ind_begin, domain[ind_begin], ind_end, domain[ind_end])
-    # max_val = np.argmax(values)
-    # print(values[ind_begin], values[ind_end], max_val, values[max_val])
     # TODO: more complex condition checking
     interesting_part = values[ind_begin:ind_end]
     return 1 - (interesting_part.max() - interesting_part.min())

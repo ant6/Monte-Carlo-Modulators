@@ -1,5 +1,4 @@
 import logging
-
 import numpy as np
 from matplotlib import use
 use("Qt5Agg")  # should be called before pyplot
