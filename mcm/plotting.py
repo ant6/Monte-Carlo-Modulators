@@ -12,12 +12,12 @@ def plot_one_peak(peak, title=None, norm=True, begin=None, end=None):
     plt.xlabel("Depth in water [mm]")
     plt.ylabel("Relative dose")
     if norm:
-        plt.ylim([0, 1])
+        plt.ylim([0, 1.2])
     if title:
         plt.title(title)
     if begin and end:
-        plt.plot([begin, begin], [0, 1])
-        plt.plot([end, end], [0, 1])
+        plt.plot([begin, begin], [0, 1.2])
+        plt.plot([end, end], [0, 1.2])
         plt.grid(True)
     plt.plot(peak[0], peak[1])
     plt.show()

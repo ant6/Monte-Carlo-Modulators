@@ -15,7 +15,6 @@ def calculate_peak_width(peak):
 
 
 def calculate_number_of_peaks(begin, end, peak):
-    # TODO: correct this BS...
     width_in_ind = calculate_peak_width(peak)
 
     begin_ind = where_is_this_val(begin, peak[0])
@@ -52,7 +51,8 @@ def check_conditions(begin, end, sum_peak):
     ind_end = where_is_this_val(end, domain)
     # TODO: more complex condition checking
     interesting_part = values[ind_begin:ind_end]
-    return 1 - (interesting_part.max() - interesting_part.min())
+    # return 1 - (interesting_part.max() - interesting_part.min())
+    return np.mean(interesting_part)
 
 
 def roll_peak_to_val(peak, target_val):

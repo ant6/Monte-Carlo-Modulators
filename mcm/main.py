@@ -42,7 +42,7 @@ def run_sim():
 
         # calculate sum peak and check condition score
         result_peak = sum_peak_to_one(peaks_to_sum)
-        result_peak[1] /= result_peak[1].max()
+        result_peak[1] /= (result_peak[1].max() * 0.9)
         score = check_conditions(begin, end, result_peak)
 
         if score > best_score:
