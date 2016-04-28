@@ -11,12 +11,12 @@ logging.basicConfig(level=logging.INFO,
                     format="[%(levelname)s] %(pathname)s at line %(lineno)s (function: %(funcName)s)\n%(message)s\n")
 
 
-if __name__ == '__main__':
+def run_sim():
     # load peak data
-    domain = read_one_peak(join("..", "data", "domain.dat"))
-    peak1_vals = read_one_peak(join("..", "data", "rs0.dat"))
-    peak2_vals = read_one_peak(join("..", "data", "rs3000.dat"))
-    peak3_vals = read_one_peak(join("..", "data", "rs6000.dat"))
+    domain = read_one_peak(join("data", "domain.dat"))
+    peak1_vals = read_one_peak(join("data", "rs0.dat"))
+    peak2_vals = read_one_peak(join("data", "rs3000.dat"))
+    peak3_vals = read_one_peak(join("data", "rs6000.dat"))
 
     # TODO: change this temporary fix to something reasonable
     peak1 = np.array([domain, peak1_vals])
