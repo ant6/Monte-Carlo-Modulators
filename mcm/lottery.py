@@ -1,4 +1,4 @@
-#TODO: :)
+from random import uniform, choice
 
 
 def random_peak_with_position(begin, end, peaks, n):
@@ -7,6 +7,6 @@ def random_peak_with_position(begin, end, peaks, n):
     :param begin:
     :param end:
     :param peaks: this should be a list
-    :return: list of pairs?
+    :return: list of pairs (peak, position)
     """
-    pass
+    return [(choice(peaks), uniform(begin, end)) for _ in range(n)]
