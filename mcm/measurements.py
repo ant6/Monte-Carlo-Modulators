@@ -1,3 +1,4 @@
+import logging
 from math import ceil
 import numpy as np
 from scipy.ndimage import shift
@@ -70,8 +71,8 @@ def check_conditions(begin, end, sum_peak):
 def roll_peak_to_val(peak, target_val):
     domain = peak[0]
     values = peak[1]
-    target_ind = (np.abs(values - target_val)).argmin()
-    print(target_ind)
+    target_ind = (np.abs(domain - target_val)).argmin()
     max_peak_val_ind = np.argmax(values)
-    shift(values, -(max_peak_val_ind - target_ind), mode='nearest')
+    logging.debug("Target shift index = %s\nMax peak value index = %s" % (target_ind, max_peak_val_ind))
+    values = shift(values, -(max_peak_val_ind - target_ind), mode='nearest')
     return np.array([domain, values])
