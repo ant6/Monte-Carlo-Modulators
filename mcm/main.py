@@ -49,7 +49,7 @@ def run_sim(n=None):
         if abs(1 - score) < best_score:
             time_elapse = time()
             print("New best score: %.2f in %.2f seconds." % (score, time_elapse - time_start))
-            plot_one_peak(result_peak, title="Score %.4f (better %.4f)" % (score, score - best_score), norm=True, begin=begin, end=end)
+            plot_one_peak(result_peak, title="Score %.4f (better %.4f)" % (score, abs((1 - score) - best_score)), norm=True, begin=begin, end=end)
             best_score = abs(1 - score)
             for p in lottery_peaks:
                 print("Peak with position %.2f" % (p[1]))
