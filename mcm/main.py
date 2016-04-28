@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO,
                     format="[%(levelname)s] %(pathname)s at line %(lineno)s (function: %(funcName)s)\n%(message)s\n")
 
 
-def run_sim():
+def run_sim(n=None):
     # load peak data
     domain = read_one_peak(join("data", "domain.dat"))
     peak1_vals = read_one_peak(join("data", "rs0.dat"))
@@ -26,12 +26,13 @@ def run_sim():
     peak3 = np.array([domain, peak3_vals])
     peak_list = [peak1, peak2, peak3]
 
-    # TODO: median filter to make values more smooth?
-
     begin = 5.0
     end = 15.0
-    best_score = 0.0
-    number_of_peaks = (calculate_number_of_peaks(begin, end, peak1))
+    best_score = 1.0
+    if not n:
+        number_of_peaks = 1 + int(calculate_number_of_peaks(begin, end, peak1) / 2)
+    else:
+        number_of_peaks = int(n)
 
     time_start = time()
     while 1:
@@ -45,11 +46,11 @@ def run_sim():
         result_peak[1] /= (result_peak[1].max() * 0.9)
         score = check_conditions(begin, end, result_peak)
 
-        if score > best_score:
+        if abs(1 - score) < best_score:
             time_elapse = time()
             print("New best score: %.2f in %.2f seconds." % (score, time_elapse - time_start))
             plot_one_peak(result_peak, title="Score %.4f (better %.4f)" % (score, score - best_score), norm=True, begin=begin, end=end)
-            best_score = score
+            best_score = abs(1 - score)
             for p in lottery_peaks:
                 print("Peak with position %.2f" % (p[1]))
             print("----------")
