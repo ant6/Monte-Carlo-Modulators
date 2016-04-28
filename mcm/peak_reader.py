@@ -1,5 +1,9 @@
 from itertools import zip_longest
 import numpy as np
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format="[%(levelname)s] %(pathname)s at line %(lineno)s (function: %(funcName)s)\n%(message)s\n")
 
 
 def transposed(matrix):
@@ -43,10 +47,18 @@ if __name__ == '__main__':
     from mcm.plotting import *
     from os.path import join
 
-    # single peak tests
-    peak1 = read_one_peak(join("..", "data", "rs0.dat"))
-    peak2 = read_one_peak(join("..", "data", "rs3000.dat"))
-    peak3 = read_one_peak(join("..", "data", "rs6000.dat"))
+    # load peak data
+    domain = read_one_peak(join("..", "data", "domain.dat"))
+    peak1_vals = read_one_peak(join("..", "data", "rs0.dat"))
+    peak2_vals = read_one_peak(join("..", "data", "rs3000.dat"))
+    peak3_vals = read_one_peak(join("..", "data", "rs6000.dat"))
+
+    # TODO: change this temporary fix to something reasonable
+    peak1 = np.array([domain, peak1_vals])
+    peak2 = np.array([domain, peak2_vals])
+    peak3 = np.array([domain, peak3_vals])
+
+    # TODO: median filter to make values more smooth?
 
     # uncomment to show only one peak
     # plot_one_peak(peak1)
@@ -54,18 +66,20 @@ if __name__ == '__main__':
     # plot_one_peak(peak3)
 
     # sum different peaks at original locations to single peak
-    sum = sum_peak_to_one([peak1, peak2, peak3])
+    a = roll_peak_to_val(peak3, 22)
+    b = roll_peak_to_val(peak2, 24)
+    c = roll_peak_to_val(peak1, 26)
+    d = roll_peak_to_val(peak1, 28)
+    sum = sum_peak_to_one([a, b, c, d])
 
     # plot sum without normalization
-    # plot_one_peak(sum)
+    # plot_one_peak(sum, norm=False)
 
     # simple values normalization -> [0; 1]
     sum[1] /= sum[1].max()
     # plot normalized sum peak
-    # plot_one_peak(sum)
+    plot_one_peak(sum, "Sum")
 
-    # calculate_number_of_peaks(5.0, 15.0, peak1)
-    print(check_conditions(5, 15, sum))
-    shifted_peak = roll_peak_to_val(peak1, 12.3)
-    plot_one_peak(shifted_peak)
-
+    logging.info("Check conditions result = %s" % check_conditions(20, 29, sum))
+    shifted_peak = roll_peak_to_val(peak1, 9.3)
+    plot_one_peak(shifted_peak, "Shifted peak (%s)" % 9.3)
