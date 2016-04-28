@@ -33,24 +33,22 @@ if __name__ == '__main__':
     begin = 5.0
     end = 15.0
     best_score = 0.0
-    number_of_peaks = 4  # will be calculated in the future
+    number_of_peaks = 5  # will be calculated in the future
 
     while 1:
-        try:
-            lottery_peaks = random_peaks_with_positions(begin, end, peak_list, number_of_peaks)
-            peaks_to_sum = []
+        lottery_peaks = random_peaks_with_positions(begin, end, peak_list, number_of_peaks)
+        peaks_to_sum = []
+        for p in lottery_peaks:
+            peaks_to_sum.append(roll_peak_to_val(p[0], p[1]))
+
+        # calculate sum peak and check condition score
+        result_peak = sum_peak_to_one(peaks_to_sum)
+        result_peak[1] /= result_peak[1].max()
+        score = check_conditions(begin, end, result_peak)
+        # print(score)
+
+        if score > best_score:
+            plot_one_peak(result_peak, title="Score %.4f (better %.4f)" % (score, score - best_score), norm=True, begin=begin, end=end)
+            best_score = score
             for p in lottery_peaks:
-                peaks_to_sum.append(roll_peak_to_val(p[0], p[1]))
-
-            # calculate sum peak and check condition score
-            result_peak = sum_peak_to_one(peaks_to_sum)
-            result_peak[1] /= result_peak[1].max()
-            score = check_conditions(begin, end, result_peak)
-            print(score)
-
-            if score > best_score:
-                best_score = score
-                plot_one_peak(result_peak, title=score, norm=True, begin=begin, end=end)
-        except:  # key handling?
-            print("Final score = ", score)
-            print(lottery_peaks)
+                print("Peak %s with position %s" % (np.argmax(p[1]), p[1]))
