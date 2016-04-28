@@ -1,3 +1,6 @@
+import logging
+
+import numpy as np
 from matplotlib import use
 use("Qt5Agg")  # should be called before pyplot
 import matplotlib.pyplot as plt
@@ -5,11 +8,39 @@ import matplotlib.pyplot as plt
 __all__ = ["plot_one_peak"]
 
 
-def plot_one_peak(peak, title=None):
+def plot_one_peak(peak, title=None, norm=True):
     plt.clf()
     plt.xlabel("Depth in water [mm]")
     plt.ylabel("Relative dose")
+    if norm:
+        plt.ylim([0, 1])
     if title:
         plt.title(title)
     plt.plot(peak[0], peak[1])
     plt.show()
+
+
+def do_some_magic(sum_peak, begin, end):
+    # profile
+    domain = sum_peak[0]
+    values = sum_peak[1]
+    middle = (begin + end) / 2
+    width = end - begin
+    logging.debug("approx middle = %f\napprox width = %f" % (middle, width))
+    section = [middle - width / 4, middle + width / 4]
+    section_coords = [(np.abs(domain - section[0])).argmin(),
+                      (np.abs(domain - section[1])).argmin()]
+    norm = np.mean(values[section_coords[0]:section_coords[1]])
+    logging.debug("Calculated norm = %f" % norm)
+    values /= norm
+
+    # draw plots
+    plt.plot(domain, values)
+    plt.plot((0, domain[-1]), (1.04, 1.04))
+    plt.plot((0, domain[-1]), (1.02, 1.02))
+    plt.plot((0, domain[-1]), (1, 1))
+    plt.plot((0, domain[-1]), (0.98, 0.98))
+    plt.plot((0, domain[-1]), (0.96, 0.96))
+    plt.xlim([0, domain[-1]])
+    plt.show()
+    plt.clf()
