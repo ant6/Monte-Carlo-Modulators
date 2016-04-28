@@ -33,8 +33,8 @@ def run_sim():
     best_score = 0.0
     number_of_peaks = (calculate_number_of_peaks(begin, end, peak1))
 
+    time_start = time()
     while 1:
-        time_start = time()
         lottery_peaks = random_peaks_with_positions(begin, end, peak_list, number_of_peaks)
         peaks_to_sum = []
         for p in lottery_peaks:
@@ -47,9 +47,10 @@ def run_sim():
 
         if score > best_score:
             time_elapse = time()
-            print("New best score: %.2f\nIn %d" % (score, time_elapse - time_start))
+            print("New best score: %.2f in %.2f seconds." % (score, time_elapse - time_start))
             plot_one_peak(result_peak, title="Score %.4f (better %.4f)" % (score, score - best_score), norm=True, begin=begin, end=end)
             best_score = score
             for p in lottery_peaks:
                 print("Peak with position %.2f" % (p[1]))
             print("----------")
+            time_start = time()
