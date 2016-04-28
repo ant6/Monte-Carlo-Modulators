@@ -46,10 +46,16 @@ if __name__ == '__main__':
     # single peak tests
     peak1 = read_one_peak(join("..", "data", "rs0.dat"))
     peak2 = read_one_peak(join("..", "data", "rs3000.dat"))
+    peak3 = read_one_peak(join("..", "data", "rs6000.dat"))
+
+    # uncomment to show only one peak
     # plot_one_peak(peak1)
     # plot_one_peak(peak2)
+    # plot_one_peak(peak3)
 
-    sum = sum_peak_to_one([peak1, peak2])
+    sum = sum_peak_to_one([peak1, peak2, peak3])
+    # plot_one_peak(sum)
+    sum /= sum[1].max()
     plot_one_peak(sum)
 
     # other BS

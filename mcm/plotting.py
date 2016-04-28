@@ -1,5 +1,4 @@
 from matplotlib import use
-
 use("Qt5Agg")  # should be called before pyplot
 import matplotlib.pyplot as plt
 
