@@ -18,6 +18,7 @@ def plot_one_peak(peak, title=None, norm=True, begin=None, end=None):
     if begin and end:
         plt.plot([begin, begin], [0, 1])
         plt.plot([end, end], [0, 1])
+        plt.grid(True)
     plt.plot(peak[0], peak[1])
     plt.show()
 
