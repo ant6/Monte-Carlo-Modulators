@@ -53,11 +53,16 @@ if __name__ == '__main__':
     # plot_one_peak(peak2)
     # plot_one_peak(peak3)
 
+    # sum different peaks at original locations to single peak
     sum = sum_peak_to_one([peak1, peak2, peak3])
-    # plot_one_peak(sum)
-    sum /= sum[1].max()
-    plot_one_peak(sum)
 
-    # other BS
-    # from mcm.measurements import calculate_number_of_peaks
-    # calculate_number_of_peaks(5.0, 15.0, peak)
+    # plot sum without normalization
+    # plot_one_peak(sum)
+
+    # simple values normalization -> [0; 1]
+    sum[1] /= sum[1].max()
+    # plot normalized sum peak
+    # plot_one_peak(sum)
+
+    # calculate_number_of_peaks(5.0, 15.0, peak1)
+    print(check_conditions(5, 15, sum))
