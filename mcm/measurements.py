@@ -1,7 +1,8 @@
 from math import ceil
 import numpy as np
+from scipy.ndimage import shift
 
-__all__ = ["calculate_number_of_peaks", "sum_peak_to_one", "check_conditions"]
+__all__ = ["calculate_number_of_peaks", "sum_peak_to_one", "check_conditions", "roll_peak_to_val"]
 
 
 def calculate_peak_width(peak):
@@ -66,5 +67,11 @@ def check_conditions(begin, end, sum_peak):
     return 1 - (interesting_part.max() - interesting_part.min())
 
 
-def roll_peak_to_val():
-    pass
+def roll_peak_to_val(peak, target_val):
+    domain = peak[0]
+    values = peak[1]
+    target_ind = (np.abs(values - target_val)).argmin()
+    print(target_ind)
+    max_peak_val_ind = np.argmax(values)
+    shift(values, -(max_peak_val_ind - target_ind), mode='nearest')
+    return np.array([domain, values])

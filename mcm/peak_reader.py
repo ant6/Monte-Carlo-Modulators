@@ -66,3 +66,6 @@ if __name__ == '__main__':
 
     # calculate_number_of_peaks(5.0, 15.0, peak1)
     print(check_conditions(5, 15, sum))
+    shifted_peak = roll_peak_to_val(peak1, 12.3)
+    plot_one_peak(shifted_peak)
+
