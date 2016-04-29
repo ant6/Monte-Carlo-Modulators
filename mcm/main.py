@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO,
                     format="[%(levelname)s] %(pathname)s at line %(lineno)s (function: %(funcName)s)\n%(message)s\n")
 
 
-def run_sim(n=None):
+def run_sim(n=None, begin='5.0', end='15.0'):
     # load peak data
     domain = read_one_peak(join("data", "domain.dat"))
     peak1_vals = read_one_peak(join("data", "rs0.dat"))
@@ -26,8 +26,8 @@ def run_sim(n=None):
     peak3 = np.array([domain, peak3_vals])
     peak_list = [peak1, peak2, peak3]
 
-    begin = 5.0
-    end = 15.0
+    begin = float(begin)
+    end = float(end)
     best_score = 1.0
     if not n:
         number_of_peaks = 1 + int(calculate_number_of_peaks(begin, end, peak1) / 2)
