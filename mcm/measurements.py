@@ -8,19 +8,19 @@ __all__ = ["calculate_number_of_peaks", "sum_peak_to_one", "check_conditions", "
 
 def calculate_peak_width(peak):
     maximum = peak[1].max()
-    value = 0.75 * maximum
-    vals = np.where(peak[1] == value)
+    value = 0.8 * maximum
 
-    return vals[0][-1] - vals[0][0]
+    left_ind = where_is_this_val(value, peak[1], left=True)
+    right_ind = where_is_this_val(value, peak[1], left=False)
+
+    return right_ind - left_ind
 
 
 def calculate_number_of_peaks(begin, end, peak):
     width_in_ind = calculate_peak_width(peak)
-
     begin_ind = where_is_this_val(begin, peak[0])
     end_ind = where_is_this_val(end, peak[0])
 
-    print(begin_ind, end_ind, end_ind-begin_ind, width_in_ind)
     number_of_peaks = 1 + int(ceil((end_ind - begin_ind) / width_in_ind))
 
     return number_of_peaks
@@ -36,15 +36,16 @@ def sum_peak_to_one(peaks):
         raise ValueError("Nothing to sum")
 
 
-def where_is_this_val(val, one_dim_array):
-    """Wrapper for numpy.where - return just one, first val found"""
-    return (np.abs(one_dim_array - val)).argmin()
+def where_is_this_val(val, one_dim_array, left=True):
+    """Return just one, the most left or right index of given value"""
+    if left:
+        return (np.abs(one_dim_array - val)).argmin()
+    else:
+        return (np.abs(one_dim_array - val)).argmax()
 
 
 def check_conditions(begin, end, sum_peak):
-    """
-    We want to maximize this result (get result closest to 1)
-    """
+    """We want to maximize this result (get result closest to 1)"""
     domain = sum_peak[0]
     values = sum_peak[1]
     ind_begin = where_is_this_val(begin, domain)

@@ -30,7 +30,11 @@ def run_sim(n=None, begin='5.0', end='15.0'):
     end = float(end)
     best_score = 1.0
     if not n:
-        number_of_peaks = 1 + int(calculate_number_of_peaks(begin, end, peak1) / 2)
+        # calculate mean width of peak based on our peak database (peak_list)
+        temp_number_of_peaks = []
+        for p in peak_list:
+            temp_number_of_peaks.append(calculate_number_of_peaks(begin, end, p))
+        number_of_peaks = int(np.mean(temp_number_of_peaks))
     else:
         number_of_peaks = int(n)
 
@@ -54,7 +58,7 @@ def run_sim(n=None, begin='5.0', end='15.0'):
         plot_one_peak('current', result_peak, format='k')
 
         if abs(1 - score) < best_score:
-            print("New best score: %.2f in %.2f seconds." % (score, time_elapsed))
+            print("New best score: %.2f in %.2f seconds.   " % (score, time_elapsed))
             plot_one_peak('best', result_peak, title="Score %.4f (better %.4f)" % (score, abs((1 - score) - best_score)), format='r')
             best_score = abs(1 - score)
             for p in lottery_peaks:
