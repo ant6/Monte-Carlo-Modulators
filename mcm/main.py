@@ -48,6 +48,8 @@ def run_sim(n=None):
         result_peak[1] /= (result_peak[1].max() * 0.9)
         score = check_conditions(begin, end, result_peak)
 
+        print("Current score: %.2f\r" % (score, ), end='', flush=True)
+
         if abs(1 - score) < best_score:
             time_elapse = time()
             print("New best score: %.2f in %.2f seconds." % (score, time_elapse - time_start))
