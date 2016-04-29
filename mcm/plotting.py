@@ -7,24 +7,31 @@ import matplotlib.pyplot as plt
 __all__ = ["prepare_plot", "plot_one_peak"]
 
 
-def prepare_plot():
+peak_plot = None
+
+
+def prepare_plot(norm=True, begin=None, end=None):
     plt.ion()
-    plt.show()
-
-
-def plot_one_peak(peak, title=None, norm=True, begin=None, end=None):
-    plt.clf()
     plt.xlabel("Depth in water [mm]")
     plt.ylabel("Relative dose")
     if norm:
         plt.ylim([0, 1.2])
-    if title:
-        plt.title(title)
     if begin and end:
         plt.plot([begin, begin], [0, 1.2])
         plt.plot([end, end], [0, 1.2])
         plt.grid(True)
-    plt.plot(peak[0], peak[1])
+    plt.show()
+
+
+def plot_one_peak(peak, title=None):
+    global peak_plot
+    if title:
+        plt.title(title)
+    try:
+        peak_plot.remove()
+    except AttributeError:
+        pass
+    peak_plot, = plt.plot(peak[0], peak[1], 'r')
     plt.pause(0.001)
 
 
