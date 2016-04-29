@@ -48,15 +48,16 @@ def run_sim(n=None, begin='5.0', end='15.0'):
         result_peak[1] /= (result_peak[1].max() * 0.9)
         score = check_conditions(begin, end, result_peak)
 
-        print("Current score: %.2f\r" % (score, ), end='', flush=True)
+        time_elapsed = time() - time_start
+
+        print("Elapsed time: %.1fs | Current score: %.2f\r" % (time_elapsed, score), end='', flush=True)
         plot_one_peak('current', result_peak, format='k')
 
         if abs(1 - score) < best_score:
-            time_elapse = time()
-            print("New best score: %.2f in %.2f seconds." % (score, time_elapse - time_start))
+            print("New best score: %.2f in %.2f seconds." % (score, time_elapsed))
             plot_one_peak('best', result_peak, title="Score %.4f (better %.4f)" % (score, abs((1 - score) - best_score)), format='r')
             best_score = abs(1 - score)
             for p in lottery_peaks:
-                print("Peak with position %.2f" % (p[1]))
+                print("Peak with position %.2f" % (p[1], ))
             print("----------")
             time_start = time()
