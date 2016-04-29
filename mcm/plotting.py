@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 __all__ = ["prepare_plot", "plot_one_peak"]
 
 
-peak_plot = None
+plots = {}
 
 
 def prepare_plot(norm=True, begin=None, end=None):
@@ -23,15 +23,14 @@ def prepare_plot(norm=True, begin=None, end=None):
     plt.show()
 
 
-def plot_one_peak(peak, title=None):
-    global peak_plot
+def plot_one_peak(name, peak, title=None, format=''):
     if title:
         plt.title(title)
     try:
-        peak_plot.remove()
-    except AttributeError:
+        plots[name].remove()
+    except KeyError:
         pass
-    peak_plot, = plt.plot(peak[0], peak[1], 'r')
+    plots[name], = plt.plot(peak[0], peak[1], format)
     plt.pause(0.001)
 
 
