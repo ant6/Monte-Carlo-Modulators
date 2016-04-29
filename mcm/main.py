@@ -34,6 +34,8 @@ def run_sim(n=None):
     else:
         number_of_peaks = int(n)
 
+    prepare_plot()
+
     time_start = time()
     while 1:
         lottery_peaks = random_peaks_with_positions(begin, end, peak_list, number_of_peaks)

@@ -4,7 +4,12 @@ from matplotlib import use
 use("Qt5Agg")  # should be called before pyplot
 import matplotlib.pyplot as plt
 
-__all__ = ["plot_one_peak"]
+__all__ = ["prepare_plot", "plot_one_peak"]
+
+
+def prepare_plot():
+    plt.ion()
+    plt.show()
 
 
 def plot_one_peak(peak, title=None, norm=True, begin=None, end=None):
@@ -20,7 +25,7 @@ def plot_one_peak(peak, title=None, norm=True, begin=None, end=None):
         plt.plot([end, end], [0, 1.2])
         plt.grid(True)
     plt.plot(peak[0], peak[1])
-    plt.show()
+    plt.pause(0.001)
 
 
 def do_some_magic(sum_peak, begin, end):
