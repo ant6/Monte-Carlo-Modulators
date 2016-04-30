@@ -3,7 +3,7 @@ from math import ceil
 import numpy as np
 from scipy.ndimage import shift
 
-__all__ = ["calculate_number_of_peaks", "sum_peak_to_one", "check_conditions", "roll_peak_to_val"]
+__all__ = ["calculate_number_of_peaks", "sum_peak_to_one", "check_conditions_with_weights", "roll_peak_to_val"]
 
 
 def calculate_peak_width(peak):
@@ -44,16 +44,36 @@ def where_is_this_val(val, one_dim_array, left=True):
         return (np.abs(one_dim_array - val)).argmax()
 
 
-def check_conditions(begin, end, sum_peak):
-    """We want to maximize this result (get result closest to 1)"""
+def check_conditions_old(begin, end, sum_peak):
     domain = sum_peak[0]
     values = sum_peak[1]
     ind_begin = where_is_this_val(begin, domain)
     ind_end = where_is_this_val(end, domain)
-    # TODO: more complex condition checking
+
     interesting_part = values[ind_begin:ind_end]
-    # return 1 - (interesting_part.max() - interesting_part.min())
-    return np.mean(interesting_part)
+    return np.abs(1 - np.mean(interesting_part))
+
+
+def check_conditions_with_weights(begin, end, sum_peak):
+    """We want to minimize this result (get closest to 0)
+
+    Score weights (sector = [begin; end]):
+        Pre sector weight: 0.35
+        Sector score weight: 0.5
+        Post sector weight: 0.15
+    """
+    domain = sum_peak[0]
+    values = sum_peak[1]
+    ind_begin = where_is_this_val(begin, domain)
+    ind_end = where_is_this_val(end, domain)
+
+    pre_penalty = np.abs(values[0:ind_begin].sum())
+    post_penalty = np.abs(values[ind_end:-1].sum())
+
+    middle_sector = np.array(values[ind_begin:ind_end]) - 1
+    middle_penalty = np.abs(middle_sector.sum())
+
+    return (pre_penalty * 0.35) + (middle_penalty * 0.5) + (post_penalty * 0.15)
 
 
 def roll_peak_to_val(peak, target_val):
