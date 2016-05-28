@@ -19,12 +19,17 @@ def run_sim(n=None, begin='5.0', end='15.0'):
     peak1_vals = read_one_peak(join("data", "rs0.dat"))
     peak2_vals = read_one_peak(join("data", "rs3000.dat"))
     peak3_vals = read_one_peak(join("data", "rs6000.dat"))
+    peak4_vals = read_one_peak(join("data", "rs_weird1.dat"))
+    peak5_vals = read_one_peak(join("data", "rs_weird2.dat"))
 
-    # TODO: change this temporary fix to something reasonable
+    # TODO: change this to something reasonable
     peak1 = np.array([domain, peak1_vals])
     peak2 = np.array([domain, peak2_vals])
     peak3 = np.array([domain, peak3_vals])
-    peak_list = [peak1, peak2, peak3]
+    peak4 = np.array([domain, peak4_vals])
+    peak5 = np.array([domain, peak5_vals])
+    # peak_list = [peak1, peak2, peak3, peak4, peak5]
+    peak_list = [peak4, peak5]
 
     begin = float(begin)
     end = float(end)
@@ -49,7 +54,7 @@ def run_sim(n=None, begin='5.0', end='15.0'):
 
         # calculate sum peak and check condition score
         result_peak = sum_peak_to_one(peaks_to_sum)
-        result_peak[1] /= (result_peak[1].max() * 0.9)
+        result_peak[1] /= (result_peak[1].max())
         score = check_conditions_with_weights(begin, end, result_peak)
 
         time_elapsed = time() - time_start
