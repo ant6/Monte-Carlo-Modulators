@@ -58,9 +58,9 @@ def check_conditions_with_weights(begin, end, sum_peak):
     """We want to minimize this result (get closest to 0)
 
     Score weights (sector = [begin; end]):
-        Pre sector weight: 0.35
-        Sector score weight: 0.5
-        Post sector weight: 0.15
+        Pre sector weight: 0.2
+        Sector score weight: 0.7
+        Post sector weight: 0.1
     """
     domain = sum_peak[0]
     values = sum_peak[1]
@@ -73,7 +73,7 @@ def check_conditions_with_weights(begin, end, sum_peak):
     middle_sector = np.array(values[ind_begin:ind_end]) - 1
     middle_penalty = np.abs(middle_sector.sum())
 
-    return (pre_penalty * 0.35) + (middle_penalty * 0.5) + (post_penalty * 0.15)
+    return (pre_penalty * 0.2) + (middle_penalty * 0.8) + (post_penalty * 0.1)
 
 
 def roll_peak_to_val(peak, target_val):
