@@ -1,8 +1,9 @@
 from os.path import join
-from mcm.measurements import roll_peak_to_val, where_is_this_val, sum_peak_to_one
+from mcm.measurements import roll_peak_to_val, where_is_this_val, sum_peak_to_one, calculate_number_of_peaks
 from mcm.peak_reader import read_one_peak
 import numpy as np
 import random
+import math
 
 
 def _plot_one_peak(peak, title=None):
@@ -17,7 +18,8 @@ class PeakSet:
         self.peaks = peaks
         self.positions = positions
         self.begin = 5.0
-        self.end = 20.0
+        self.end = 15.0
+        self.old_positions = positions
 
     def sum_peak(self):
         sum_peak = sum_peak_to_one(self.peaks)
@@ -45,6 +47,7 @@ class PeakSet:
         for pos in self.positions:
             pos += random.uniform(-1, 1)
             new_pos.append(pos)
+        self.old_positions = self.positions
         self.positions = new_pos
 
         i = 0
@@ -59,6 +62,23 @@ class PeakSet:
     def end(self, e):
         self.end = e
 
+    def revert_positions(self):
+        self.positions = self.old_positions
+
+
+def prob_old(pre, post, t):
+    if post < pre:
+        return random.uniform(-t, t)
+    else:
+        return random.uniform(-t, 0.5*t)
+
+
+def prob(pre, post, t):
+    delt = (pre - post)
+    try:
+        return math.exp(delt/t)
+    except OverflowError:
+        return float('inf')
 
 if __name__ == '__main__':
     from matplotlib import use
@@ -78,18 +98,32 @@ if __name__ == '__main__':
     peak4 = np.array([domain, peak4_vals])
     peak5 = np.array([domain, peak5_vals])
     # peak_list = [peak1, peak2, peak3, peak4, peak5]
-    peak_list = [peak1, peak2, peak3]
+    peak_list = [peak1, peak2, peak3, peak1, peak1, peak3]
+
+    # calculate mean width of peak based on our peak database (peak_list)
+    temp_number_of_peaks = []
+    for p in peak_list:
+        temp_number_of_peaks.append(calculate_number_of_peaks(5, 15, p))
+    number_of_peaks = int(np.mean(temp_number_of_peaks))
+    print(number_of_peaks)
 
     k = 0
-    k_end = 1000
-
-    p = PeakSet(peak_list, [5, 8, 12])
+    k_end = 10000
+    r = 0
+    p = PeakSet(peak_list, [5, 7, 9, 10, 11, 13])
 
     while k < k_end:
         k += 1
         temp = k/k_end
+        e0 = p.quality()
         p.anneal()
-        en = p.quality()
-        print(k, en)
+        e1 = p.quality()
+        print(k, e1, e1-e0)
+        if prob(e0, e1, temp) < random.uniform(0, 1):
+            p.revert_positions()
+            # print("reverted!")
+            r += 1
 
-        _plot_one_peak(p.sum_peak())
+    print("reverted %s times (ran %s times)" % (r, k_end))
+    print(p.quality())
+    _plot_one_peak(p.sum_peak())
