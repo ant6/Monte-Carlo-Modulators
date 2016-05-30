@@ -39,7 +39,7 @@ class PeakSet:
 
         return (pre_penalty * 0.2) + (middle_penalty * 0.8) + (post_penalty * 0.1)
 
-    def randomly_move(self):
+    def anneal(self):
         new_pos = []
         new_peaks = []
         for pos in self.positions:
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     while k < k_end:
         k += 1
         temp = k/k_end
-        p.randomly_move()
+        p.anneal()
         en = p.quality()
         print(k, en)
 
