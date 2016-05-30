@@ -73,20 +73,23 @@ def prob_old(pre, post, t):
     if post < pre:
         return random.uniform(-t, t)
     else:
-        return random.uniform(-t, 0.5*t)
+        return random.uniform(-t, 0.5 * t)
 
 
 def prob(pre, post, t):
     delt = pre - post
     try:
-        return math.exp(delt/t)
+        return math.exp(delt / t)
     except OverflowError:
         return float('inf')
 
+
 if __name__ == '__main__':
     from matplotlib import use
+
     use("Qt5Agg")
     import matplotlib.pyplot as plt
+
     # load peak data
     domain = read_one_peak(join("..", "data", "domain.dat"))
     peak1_vals = read_one_peak(join("..", "data", "rs0.dat"))
@@ -111,31 +114,32 @@ if __name__ == '__main__':
     print(number_of_peaks)
 
     k = 0
-    k_end = 100000
+    k_end = 5000
     r = 0
     begin = 5
     end = 15
-    p = PeakSet(peak_list, [5, 5.5, 6, 17, 19, 6])
+    p = PeakSet(peak_list, [6, 7, 8, 9, 10, 11])
     p.begin(begin)
     p.end(end)
     results = []
 
     while k < k_end:
         k += 1
-        temp = k/k_end
+        temp = k / k_end
         e0 = p.quality()
         p.anneal()
         e1 = p.quality()
-        # print(k, e1)
-        results.append((k, e1))
         if prob(e0, e1, temp) < random.uniform(0, 1):
+            results.append((k, e0))
             p.revert_positions()
-            # print("reverted!")
             r += 1
+        else:
+            results.append((k, e1))
 
     print("reverted %s times (ran %s times)" % (r, k_end))
     print(p.quality())
     import pickle
+
     with open("%s.p" % time.time(), "w+b") as f:
         pickle.dump(results, f)
     _plot_one_peak(p.sum_peak())
