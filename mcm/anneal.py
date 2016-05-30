@@ -1,4 +1,7 @@
 from os.path import join
+
+import time
+
 from mcm.measurements import roll_peak_to_val, where_is_this_val, sum_peak_to_one, calculate_number_of_peaks
 from mcm.peak_reader import read_one_peak
 import numpy as np
@@ -17,8 +20,8 @@ class PeakSet:
     def __init__(self, peaks, positions):
         self.peaks = peaks
         self.positions = positions
-        self.begin = 5.0
-        self.end = 15.0
+        self._begin = 5.0
+        self._end = 15.0
         self.old_positions = positions
 
     def sum_peak(self):
@@ -30,8 +33,8 @@ class PeakSet:
         sum = self.sum_peak()
         domain = sum[0]
         values = sum[1]
-        ind_begin = where_is_this_val(self.begin, domain)
-        ind_end = where_is_this_val(self.end, domain)
+        ind_begin = where_is_this_val(self._begin, domain)
+        ind_end = where_is_this_val(self._end, domain)
 
         pre_penalty = np.abs(values[0:ind_begin].sum())
         post_penalty = np.abs(values[ind_end:-1].sum())
@@ -39,7 +42,7 @@ class PeakSet:
         middle_sector = np.array(values[ind_begin:ind_end]) - 1
         middle_penalty = np.abs(middle_sector.sum())
 
-        return (pre_penalty * 0.2) + (middle_penalty * 0.8) + (post_penalty * 0.1)
+        return pre_penalty + middle_penalty + post_penalty
 
     def anneal(self):
         new_pos = []
@@ -57,10 +60,10 @@ class PeakSet:
         self.peaks = new_peaks
 
     def begin(self, b):
-        self.begin = b
+        self._begin = b
 
     def end(self, e):
-        self.end = e
+        self._end = e
 
     def revert_positions(self):
         self.positions = self.old_positions
@@ -74,7 +77,7 @@ def prob_old(pre, post, t):
 
 
 def prob(pre, post, t):
-    delt = (pre - post)
+    delt = pre - post
     try:
         return math.exp(delt/t)
     except OverflowError:
@@ -108,9 +111,14 @@ if __name__ == '__main__':
     print(number_of_peaks)
 
     k = 0
-    k_end = 10000
+    k_end = 100000
     r = 0
-    p = PeakSet(peak_list, [5, 7, 9, 10, 11, 13])
+    begin = 5
+    end = 15
+    p = PeakSet(peak_list, [5, 5.5, 6, 17, 19, 6])
+    p.begin(begin)
+    p.end(end)
+    results = []
 
     while k < k_end:
         k += 1
@@ -118,7 +126,8 @@ if __name__ == '__main__':
         e0 = p.quality()
         p.anneal()
         e1 = p.quality()
-        print(k, e1, e1-e0)
+        # print(k, e1)
+        results.append((k, e1))
         if prob(e0, e1, temp) < random.uniform(0, 1):
             p.revert_positions()
             # print("reverted!")
@@ -126,4 +135,7 @@ if __name__ == '__main__':
 
     print("reverted %s times (ran %s times)" % (r, k_end))
     print(p.quality())
+    import pickle
+    with open("%s.p" % time.time(), "w+b") as f:
+        pickle.dump(results, f)
     _plot_one_peak(p.sum_peak())
