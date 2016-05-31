@@ -2,7 +2,7 @@ from os.path import join
 
 import time
 
-from mcm.measurements import roll_peak_to_val, where_is_this_val, sum_peak_to_one, calculate_number_of_peaks
+from mcm.measurements import roll_peak_to_val, where_is_this_val, sum_peak_to_one
 from mcm.peak_reader import read_one_peak
 import numpy as np
 import random
@@ -86,7 +86,6 @@ def prob(pre, post, t):
 
 if __name__ == '__main__':
     from matplotlib import use
-
     use("Qt5Agg")
     import matplotlib.pyplot as plt
 
@@ -95,26 +94,16 @@ if __name__ == '__main__':
     peak1_vals = read_one_peak(join("..", "data", "rs0.dat"))
     peak2_vals = read_one_peak(join("..", "data", "rs3000.dat"))
     peak3_vals = read_one_peak(join("..", "data", "rs6000.dat"))
-    peak4_vals = read_one_peak(join("..", "data", "rs_weird1.dat"))
-    peak5_vals = read_one_peak(join("..", "data", "rs_weird2.dat"))
 
     peak1 = np.array([domain, peak1_vals])
     peak2 = np.array([domain, peak2_vals])
     peak3 = np.array([domain, peak3_vals])
-    peak4 = np.array([domain, peak4_vals])
-    peak5 = np.array([domain, peak5_vals])
-    # peak_list = [peak1, peak2, peak3, peak4, peak5]
+
     peak_list = [peak1, peak2, peak3, peak1, peak1, peak3]
 
-    # calculate mean width of peak based on our peak database (peak_list)
-    temp_number_of_peaks = []
-    for p in peak_list:
-        temp_number_of_peaks.append(calculate_number_of_peaks(5, 15, p))
-    number_of_peaks = int(np.mean(temp_number_of_peaks))
-    print(number_of_peaks)
-
+    t_start = time.time()
     k = 0
-    k_end = 5000
+    k_end = 100000
     r = 0
     begin = 5
     end = 15
@@ -138,8 +127,11 @@ if __name__ == '__main__':
 
     print("reverted %s times (ran %s times)" % (r, k_end))
     print(p.quality())
-    import pickle
 
+    t_end = time.time()
+    print("Computed in %.2f" % (t_end - t_start))
+
+    import pickle
     with open("%s.p" % time.time(), "w+b") as f:
         pickle.dump(results, f)
     _plot_one_peak(p.sum_peak())
