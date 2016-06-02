@@ -44,10 +44,16 @@ if data_mc:
         if e < best:
             best = e
         ym2.append(best)
-    m1, = plt.plot(xm, ym, label="MC score")
+    # m1, = plt.plot(xm, ym, label="MC score")
     m2, = plt.plot(xm, ym2, label="MC best")
-    hands.append(m1)
+    # hands.append(m1)
     hands.append(m2)
+
+from scipy.signal import medfilt
+ym = medfilt(ym, kernel_size=21)
+
+m1, = plt.plot(xm, ym, label="MC score")
+hands.append(m1)
 
 plt.xlabel("Time")
 plt.ylabel("Quality")
