@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     t_start = time.time()
     k = 0
-    k_end = 100000
+    k_end = 1000
     r = 0
     begin = 5
     end = 15
@@ -57,11 +57,13 @@ if __name__ == '__main__':
         result_peak[1] /= (result_peak[1].max())
         qnew = quality(result_peak)
         results.append((k, qnew))
+        if k % 100 == 0:
+            print("Step: %d, sample score: %.2f" % (k, qnew))
 
     t_end = time.time()
     print("Computed in %.2f" % (t_end - t_start))
 
     # dump data
     import pickle
-    with open("%s.p" % time.time(), "w+b") as f:
+    with open("mc.p", "w+b") as f:
         pickle.dump(results, f)

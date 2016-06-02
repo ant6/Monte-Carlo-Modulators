@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
     t_start = time.time()
     k = 0
-    k_end = 100000
+    k_end = 1000
     r = 0
     begin = 5
     end = 15
@@ -125,6 +125,10 @@ if __name__ == '__main__':
         else:
             results.append((k, e1))
 
+        if k % 100 == 0:
+            print("Step: %d, sample score: %.2f" % (k, e1))
+
+    # print time elapsed
     print("reverted %s times (ran %s times)" % (r, k_end))
     print(p.quality())
 
@@ -132,6 +136,6 @@ if __name__ == '__main__':
     print("Computed in %.2f" % (t_end - t_start))
 
     import pickle
-    with open("%s.p" % time.time(), "w+b") as f:
+    with open("sa.p", "w+b") as f:
         pickle.dump(results, f)
-    _plot_one_peak(p.sum_peak())
+    # _plot_one_peak(p.sum_peak())
