@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     t_start = time.time()
     k = 0
-    k_end = 10000
+    k_end = 100000
     r = 0
     begin = 5
     end = 15
