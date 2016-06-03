@@ -43,6 +43,8 @@ if __name__ == '__main__':
     begin = 5
     end = 15
     results = []
+    best_peaks = []
+    best = 999999
 
     while k < k_end:
         k += 1
@@ -57,6 +59,10 @@ if __name__ == '__main__':
         result_peak[1] /= (result_peak[1].max())
         qnew = quality(result_peak)
         results.append((k, qnew))
+        if qnew < best:
+            best = qnew
+            best_peaks.append(result_peak)
+            print('best:', len(best_peaks), best, ' added.')
         if k % 100 == 0:
             print("Step: %d, sample score: %.2f" % (k, qnew))
 
@@ -67,3 +73,6 @@ if __name__ == '__main__':
     import pickle
     with open("mc.p", "w+b") as f:
         pickle.dump(results, f)
+
+    with open("best_mc.p", "w+b") as f2:
+        pickle.dump(best_peaks, f2)

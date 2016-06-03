@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
     t_start = time.time()
     k = 0
-    k_end = 1000000
+    k_end = 1000
     r = 0
     begin = 5
     end = 15
@@ -138,9 +138,14 @@ if __name__ == '__main__':
     p.begin(begin)
     p.end(end)
     results = []
+    test_peaks = []
+    best_peaks = []
 
     while k < k_end:
         k += 1
+        if k < 10:
+            test_peaks.append(p.sum_peak())
+            print('test', len(test_peaks))
         temp = k / k_end
         e0 = p.quality()
         p.anneal()
@@ -153,16 +158,17 @@ if __name__ == '__main__':
             results.append((k, e1))
 
         qual = p.quality()
-        plot_one_peak('current', p.sum_peak(), format='k')
+        # plot_one_peak('current', p.sum_peak(), format='k')
 
         if qual < best_qual:
-            plot_one_peak('best', p.sum_peak(), title="Quality %.4f (better by %.4f)" % (qual, best_qual - qual), format='r')
+            # plot_one_peak('best', p.sum_peak(), title="Quality %.4f (better by %.4f)" % (qual, best_qual - qual), format='r')
             best_qual = qual
+            best_peaks.append(p.sum_peak())
+            print('best', len(best_peaks))
 
         if k % 100 == 0:
             print("Step: %d, sample score: %.2f" % (k, e1))
             # _plot_one_peak(p.sum_peak())
-
 
     # print time elapsed
     print("reverted %s times (ran %s times)" % (r, k_end))
@@ -174,3 +180,9 @@ if __name__ == '__main__':
     import pickle
     with open("sa.p", "w+b") as f:
         pickle.dump(results, f)
+
+    with open("start_sa.p", "w+b") as f2:
+        pickle.dump(test_peaks, f2)
+
+    with open("best_sa.p", "w+b") as f3:
+        pickle.dump(best_peaks, f3)
